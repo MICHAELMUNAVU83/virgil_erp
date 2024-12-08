@@ -1,0 +1,26 @@
+<.header>
+  Access email <%= @access_email.id %>
+  <:subtitle>This is a access_email record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/access_emails/#{@access_email}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit access_email</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Active"><%= @access_email.active %></:item>
+</.list>
+
+<.back navigate={~p"/access_emails"}>Back to access_emails</.back>
+
+<.modal :if={@live_action == :edit} id="access_email-modal" show on_cancel={JS.patch(~p"/access_emails/#{@access_email}")}>
+  <.live_component
+    module={VirgilErpWeb.AccessEmailLive.FormComponent}
+    id={@access_email.id}
+    title={@page_title}
+    action={@live_action}
+    access_email={@access_email}
+    patch={~p"/access_emails/#{@access_email}"}
+  />
+</.modal>

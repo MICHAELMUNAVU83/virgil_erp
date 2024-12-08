@@ -1,0 +1,41 @@
+<.header>
+  Listing Access emails
+  <:actions>
+    <.link patch={~p"/access_emails/new"}>
+      <.button>New Access email</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="access_emails"
+  rows={@streams.access_emails}
+  row_click={fn {_id, access_email} -> JS.navigate(~p"/access_emails/#{access_email}") end}
+>
+  <:col :let={{_id, access_email}} label="Active"><%= access_email.active %></:col>
+  <:action :let={{_id, access_email}}>
+    <div class="sr-only">
+      <.link navigate={~p"/access_emails/#{access_email}"}>Show</.link>
+    </div>
+    <.link patch={~p"/access_emails/#{access_email}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, access_email}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: access_email.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="access_email-modal" show on_cancel={JS.patch(~p"/access_emails")}>
+  <.live_component
+    module={VirgilErpWeb.AccessEmailLive.FormComponent}
+    id={@access_email.id || :new}
+    title={@page_title}
+    action={@live_action}
+    access_email={@access_email}
+    patch={~p"/access_emails"}
+  />
+</.modal>
