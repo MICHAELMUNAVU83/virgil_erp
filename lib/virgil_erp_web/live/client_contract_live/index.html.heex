@@ -1,0 +1,45 @@
+<.header>
+  Listing Client contracts
+  <:actions>
+    <.link patch={~p"/client_contracts/new"}>
+      <.button>New Client contract</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="client_contracts"
+  rows={@streams.client_contracts}
+  row_click={fn {_id, client_contract} -> JS.navigate(~p"/client_contracts/#{client_contract}") end}
+>
+  <:col :let={{_id, client_contract}} label="Signed contract"><%= client_contract.signed_contract %></:col>
+  <:col :let={{_id, client_contract}} label="Date"><%= client_contract.date %></:col>
+  <:col :let={{_id, client_contract}} label="Client"><%= client_contract.client %></:col>
+  <:col :let={{_id, client_contract}} label="Description"><%= client_contract.description %></:col>
+  <:col :let={{_id, client_contract}} label="Template link"><%= client_contract.template_link %></:col>
+  <:action :let={{_id, client_contract}}>
+    <div class="sr-only">
+      <.link navigate={~p"/client_contracts/#{client_contract}"}>Show</.link>
+    </div>
+    <.link patch={~p"/client_contracts/#{client_contract}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, client_contract}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: client_contract.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="client_contract-modal" show on_cancel={JS.patch(~p"/client_contracts")}>
+  <.live_component
+    module={VirgilErpWeb.ClientContractLive.FormComponent}
+    id={@client_contract.id || :new}
+    title={@page_title}
+    action={@live_action}
+    client_contract={@client_contract}
+    patch={~p"/client_contracts"}
+  />
+</.modal>

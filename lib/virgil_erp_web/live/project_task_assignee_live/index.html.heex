@@ -1,0 +1,40 @@
+<.header>
+  Listing Project task assignees
+  <:actions>
+    <.link patch={~p"/project_task_assignees/new"}>
+      <.button>New Project task assignee</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="project_task_assignees"
+  rows={@streams.project_task_assignees}
+  row_click={fn {_id, project_task_assignee} -> JS.navigate(~p"/project_task_assignees/#{project_task_assignee}") end}
+>
+  <:action :let={{_id, project_task_assignee}}>
+    <div class="sr-only">
+      <.link navigate={~p"/project_task_assignees/#{project_task_assignee}"}>Show</.link>
+    </div>
+    <.link patch={~p"/project_task_assignees/#{project_task_assignee}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, project_task_assignee}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: project_task_assignee.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="project_task_assignee-modal" show on_cancel={JS.patch(~p"/project_task_assignees")}>
+  <.live_component
+    module={VirgilErpWeb.ProjectTaskAssigneeLive.FormComponent}
+    id={@project_task_assignee.id || :new}
+    title={@page_title}
+    action={@live_action}
+    project_task_assignee={@project_task_assignee}
+    patch={~p"/project_task_assignees"}
+  />
+</.modal>

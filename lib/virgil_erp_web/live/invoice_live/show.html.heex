@@ -1,0 +1,31 @@
+<.header>
+  Invoice <%= @invoice.id %>
+  <:subtitle>This is a invoice record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/invoices/#{@invoice}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit invoice</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Invoice"><%= @invoice.invoice_id %></:item>
+  <:item title="Amount"><%= @invoice.amount %></:item>
+  <:item title="Pay by date"><%= @invoice.pay_by_date %></:item>
+  <:item title="Terms and conditions"><%= @invoice.terms_and_conditions %></:item>
+  <:item title="Client"><%= @invoice.client %></:item>
+  <:item title="Is paid"><%= @invoice.is_paid %></:item>
+</.list>
+
+<.back navigate={~p"/invoices"}>Back to invoices</.back>
+
+<.modal :if={@live_action == :edit} id="invoice-modal" show on_cancel={JS.patch(~p"/invoices/#{@invoice}")}>
+  <.live_component
+    module={VirgilErpWeb.InvoiceLive.FormComponent}
+    id={@invoice.id}
+    title={@page_title}
+    action={@live_action}
+    invoice={@invoice}
+    patch={~p"/invoices/#{@invoice}"}
+  />
+</.modal>

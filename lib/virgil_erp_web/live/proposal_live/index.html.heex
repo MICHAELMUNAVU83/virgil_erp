@@ -1,0 +1,45 @@
+<.header>
+  Listing Proposals
+  <:actions>
+    <.link patch={~p"/proposals/new"}>
+      <.button>New Proposal</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="proposals"
+  rows={@streams.proposals}
+  row_click={fn {_id, proposal} -> JS.navigate(~p"/proposals/#{proposal}") end}
+>
+  <:col :let={{_id, proposal}} label="Client"><%= proposal.client %></:col>
+  <:col :let={{_id, proposal}} label="Pdf attachment"><%= proposal.pdf_attachment %></:col>
+  <:col :let={{_id, proposal}} label="Link attachment"><%= proposal.link_attachment %></:col>
+  <:col :let={{_id, proposal}} label="Client type"><%= proposal.client_type %></:col>
+  <:col :let={{_id, proposal}} label="Description"><%= proposal.description %></:col>
+  <:action :let={{_id, proposal}}>
+    <div class="sr-only">
+      <.link navigate={~p"/proposals/#{proposal}"}>Show</.link>
+    </div>
+    <.link patch={~p"/proposals/#{proposal}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, proposal}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: proposal.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="proposal-modal" show on_cancel={JS.patch(~p"/proposals")}>
+  <.live_component
+    module={VirgilErpWeb.ProposalLive.FormComponent}
+    id={@proposal.id || :new}
+    title={@page_title}
+    action={@live_action}
+    proposal={@proposal}
+    patch={~p"/proposals"}
+  />
+</.modal>

@@ -1,0 +1,42 @@
+<.header>
+  Listing Project task comments
+  <:actions>
+    <.link patch={~p"/project_task_comments/new"}>
+      <.button>New Project task comment</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="project_task_comments"
+  rows={@streams.project_task_comments}
+  row_click={fn {_id, project_task_comment} -> JS.navigate(~p"/project_task_comments/#{project_task_comment}") end}
+>
+  <:col :let={{_id, project_task_comment}} label="Comment"><%= project_task_comment.comment %></:col>
+  <:col :let={{_id, project_task_comment}} label="Attachment"><%= project_task_comment.attachment %></:col>
+  <:action :let={{_id, project_task_comment}}>
+    <div class="sr-only">
+      <.link navigate={~p"/project_task_comments/#{project_task_comment}"}>Show</.link>
+    </div>
+    <.link patch={~p"/project_task_comments/#{project_task_comment}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, project_task_comment}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: project_task_comment.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="project_task_comment-modal" show on_cancel={JS.patch(~p"/project_task_comments")}>
+  <.live_component
+    module={VirgilErpWeb.ProjectTaskCommentLive.FormComponent}
+    id={@project_task_comment.id || :new}
+    title={@page_title}
+    action={@live_action}
+    project_task_comment={@project_task_comment}
+    patch={~p"/project_task_comments"}
+  />
+</.modal>

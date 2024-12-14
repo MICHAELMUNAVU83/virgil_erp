@@ -1,0 +1,45 @@
+<.header>
+  Listing Project tasks
+  <:actions>
+    <.link patch={~p"/project_tasks/new"}>
+      <.button>New Project task</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="project_tasks"
+  rows={@streams.project_tasks}
+  row_click={fn {_id, project_task} -> JS.navigate(~p"/project_tasks/#{project_task}") end}
+>
+  <:col :let={{_id, project_task}} label="Title"><%= project_task.title %></:col>
+  <:col :let={{_id, project_task}} label="Description"><%= project_task.description %></:col>
+  <:col :let={{_id, project_task}} label="Type"><%= project_task.type %></:col>
+  <:col :let={{_id, project_task}} label="Priority"><%= project_task.priority %></:col>
+  <:col :let={{_id, project_task}} label="Attachment"><%= project_task.attachment %></:col>
+  <:action :let={{_id, project_task}}>
+    <div class="sr-only">
+      <.link navigate={~p"/project_tasks/#{project_task}"}>Show</.link>
+    </div>
+    <.link patch={~p"/project_tasks/#{project_task}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, project_task}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: project_task.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="project_task-modal" show on_cancel={JS.patch(~p"/project_tasks")}>
+  <.live_component
+    module={VirgilErpWeb.ProjectTaskLive.FormComponent}
+    id={@project_task.id || :new}
+    title={@page_title}
+    action={@live_action}
+    project_task={@project_task}
+    patch={~p"/project_tasks"}
+  />
+</.modal>

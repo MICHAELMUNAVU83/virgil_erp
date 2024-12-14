@@ -1,0 +1,30 @@
+<.header>
+  Client contract <%= @client_contract.id %>
+  <:subtitle>This is a client_contract record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/client_contracts/#{@client_contract}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit client_contract</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Signed contract"><%= @client_contract.signed_contract %></:item>
+  <:item title="Date"><%= @client_contract.date %></:item>
+  <:item title="Client"><%= @client_contract.client %></:item>
+  <:item title="Description"><%= @client_contract.description %></:item>
+  <:item title="Template link"><%= @client_contract.template_link %></:item>
+</.list>
+
+<.back navigate={~p"/client_contracts"}>Back to client_contracts</.back>
+
+<.modal :if={@live_action == :edit} id="client_contract-modal" show on_cancel={JS.patch(~p"/client_contracts/#{@client_contract}")}>
+  <.live_component
+    module={VirgilErpWeb.ClientContractLive.FormComponent}
+    id={@client_contract.id}
+    title={@page_title}
+    action={@live_action}
+    client_contract={@client_contract}
+    patch={~p"/client_contracts/#{@client_contract}"}
+  />
+</.modal>

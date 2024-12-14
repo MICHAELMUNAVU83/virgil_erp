@@ -1,0 +1,25 @@
+<.header>
+  Project task assignee <%= @project_task_assignee.id %>
+  <:subtitle>This is a project_task_assignee record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/project_task_assignees/#{@project_task_assignee}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit project_task_assignee</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+</.list>
+
+<.back navigate={~p"/project_task_assignees"}>Back to project_task_assignees</.back>
+
+<.modal :if={@live_action == :edit} id="project_task_assignee-modal" show on_cancel={JS.patch(~p"/project_task_assignees/#{@project_task_assignee}")}>
+  <.live_component
+    module={VirgilErpWeb.ProjectTaskAssigneeLive.FormComponent}
+    id={@project_task_assignee.id}
+    title={@page_title}
+    action={@live_action}
+    project_task_assignee={@project_task_assignee}
+    patch={~p"/project_task_assignees/#{@project_task_assignee}"}
+  />
+</.modal>

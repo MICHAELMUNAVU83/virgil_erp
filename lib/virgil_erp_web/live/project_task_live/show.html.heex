@@ -1,0 +1,30 @@
+<.header>
+  Project task <%= @project_task.id %>
+  <:subtitle>This is a project_task record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/project_tasks/#{@project_task}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit project_task</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Title"><%= @project_task.title %></:item>
+  <:item title="Description"><%= @project_task.description %></:item>
+  <:item title="Type"><%= @project_task.type %></:item>
+  <:item title="Priority"><%= @project_task.priority %></:item>
+  <:item title="Attachment"><%= @project_task.attachment %></:item>
+</.list>
+
+<.back navigate={~p"/project_tasks"}>Back to project_tasks</.back>
+
+<.modal :if={@live_action == :edit} id="project_task-modal" show on_cancel={JS.patch(~p"/project_tasks/#{@project_task}")}>
+  <.live_component
+    module={VirgilErpWeb.ProjectTaskLive.FormComponent}
+    id={@project_task.id}
+    title={@page_title}
+    action={@live_action}
+    project_task={@project_task}
+    patch={~p"/project_tasks/#{@project_task}"}
+  />
+</.modal>
