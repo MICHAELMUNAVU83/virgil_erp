@@ -1,4 +1,4 @@
-<.header>
+<%!-- <.header>
   Listing Todos
   <:actions>
     <.link patch={~p"/todos/new"}>
@@ -43,4 +43,16 @@
     todo={@todo}
     patch={~p"/todos"}
   />
-</.modal>
+</.modal> --%>
+
+<.todos_component />
+
+<.new_todo_component
+  if={@live_action == :new}
+  id={:new}
+  title={@page_title}
+  form={@form}
+  action={@live_action}
+  todo={@todo}
+  patch={~p"/todos"}
+/>

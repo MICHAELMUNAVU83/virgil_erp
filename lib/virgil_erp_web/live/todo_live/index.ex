@@ -6,7 +6,12 @@ defmodule VirgilErpWeb.TodoLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :todos, Todos.list_todos())}
+    {:ok,
+     socket
+     |> assign_new(:form, fn ->
+       to_form(Todos.change_todo(%Todo{}))
+     end)
+     |> stream(:todos, Todos.list_todos())}
   end
 
   @impl true
@@ -23,6 +28,9 @@ defmodule VirgilErpWeb.TodoLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Todo")
+    |> assign_new(:form, fn ->
+      to_form(Todos.change_todo(%Todo{}))
+    end)
     |> assign(:todo, %Todo{})
   end
 

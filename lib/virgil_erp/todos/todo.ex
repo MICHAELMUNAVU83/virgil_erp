@@ -18,7 +18,7 @@ defmodule VirgilErp.Todos.Todo do
   @doc false
   def changeset(todo, attrs) do
     todo
-    |> cast(attrs, [:name, :description, :due_by, :remind_at, :remind_by, :is_completed])
-    |> validate_required([:name, :description, :due_by, :remind_at, :remind_by, :is_completed])
+    |> cast(attrs, [:name, :description, :due_by, :remind_at, :remind_by, :is_completed, :assignee_id, :assigneer_id])
+    |> validate_required([:name, :description, :is_completed])
   end
 end
