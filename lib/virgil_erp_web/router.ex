@@ -22,6 +22,8 @@ defmodule VirgilErpWeb.Router do
 
     get "/", PageController, :home
 
+    live "/dashboard", DashboardLive, :index
+
     live "/projects", ProjectLive.Index, :index
     live "/projects/new", ProjectLive.Index, :new
     live "/projects/:id/edit", ProjectLive.Index, :edit

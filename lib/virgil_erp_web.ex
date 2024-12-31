@@ -86,6 +86,7 @@ defmodule VirgilErpWeb do
       # Core UI components and translation
       import VirgilErpWeb.CoreComponents
       import VirgilErpWeb.Gettext
+      import VirgilErpWeb.DashboardComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
