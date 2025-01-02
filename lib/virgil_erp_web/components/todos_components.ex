@@ -84,7 +84,7 @@ defmodule VirgilErpWeb.TodosComponents do
         <div class="flex gap-4 items-center">
           <div class="flex items-center border border-gray-500 p-2 text-xs rounded-md text-white cursor-pointer">
             <div id="date-picker-container" phx-hook="FlatpickrHook" class="relative cursor-pointer">
-              <p id="togglePicker">
+              <p id="togglePicker" class="cursor-pointer">
                 <span class="mr-2"><i class="fa fa-calendar"></i></span> {@selected_date || "Today"}
               </p>
 
@@ -103,7 +103,7 @@ defmodule VirgilErpWeb.TodosComponents do
             phx-hook="OutsideClickHook"
             class="flex relative cursor-pointer items-center border-[0.5px] p-2 text-xs border-gray-500 rounded-md text-white"
           >
-            <p phx-click="toggle_priority_list">
+            <p phx-click="toggle_priority_list" class="cursor-pointer">
               <%= if @selected_priority do %>
                 <i
                   class={"fa fa-flag text-#{@selected_priority_color}"}
@@ -129,7 +129,7 @@ defmodule VirgilErpWeb.TodosComponents do
               phx-hook="FlatpickrHookDateTime"
               class="relative cursor-pointer"
             >
-              <p id="togglePickerDateTime">
+              <p id="togglePickerDateTime" class="cursor-pointer">
                 <span class="mr-2"><i class="fa fa-calendar"></i></span> {@selected_datetime ||
                   "Reminders"}
               </p>
