@@ -21,7 +21,7 @@ defmodule VirgilErpWeb.TodosComponents do
           </div>
 
           <div class="w-[80%] p-2 flex justify-center items-center">
-            TYhe dfate Today
+            The Date Today
           </div>
           <div class=" border-l-[1px] border-gray-500 p-2">
             <i class="fa fa-chevron-right"></i>
@@ -57,17 +57,128 @@ defmodule VirgilErpWeb.TodosComponents do
 
   def new_todo_component(assigns) do
     ~H"""
-    <.simple_form for={@form} id="todo-form" phx-change="validate" phx-submit="save">
-      <.input field={@form[:name]} type="text" label="Name" />
-      <.input field={@form[:description]} type="text" label="Description" />
-      <.input field={@form[:due_by]} type="datetime-local" label="Due by" />
-      <.input field={@form[:remind_at]} type="datetime-local" label="Remind at" />
-      <.input field={@form[:remind_by]} type="datetime-local" label="Remind by" />
-      <.input field={@form[:is_completed]} type="checkbox" label="Is completed" />
-      <:actions>
-        <.button phx-disable-with="Saving...">Save Todo</.button>
-      </:actions>
-    </.simple_form>
+    <.simple_new_todo_form
+      for={@form}
+      id="todo-form"
+      class="border-[1px] border-gray-500 rounded-md  mt-8"
+      phx-submit="save_todo"
+    >
+      <div class="p-2">
+        <.new_todo_input
+          field={@form[:name]}
+          type="text"
+          name="name"
+          class="border-none w-[100%] focus:border-none text-white  focus:ring-0 bg-transparent placeholder-grey-500 border-transparent"
+          placeholder="Enter todo name..."
+          autocomplete="off"
+        />
+        <.new_todo_input
+          field={@form[:description]}
+          type="textarea"
+          name="description"
+          autocomplete="off"
+          class="border-none w-[100%] focus:border-none text-white  focus:ring-0 bg-transparent placeholder-grey-500 border-transparent"
+          placeholder="Description..."
+        />
+
+        <div class="flex gap-4 items-center">
+          <div class="flex items-center border border-gray-500 p-2 text-xs rounded-md text-white cursor-pointer">
+            <div id="date-picker-container" phx-hook="FlatpickrHook" class="relative cursor-pointer">
+              <p id="togglePicker">
+                <span class="mr-2"><i class="fa fa-calendar"></i></span> {@selected_date || "Today"}
+              </p>
+
+              <input
+                type="text"
+                id="datepicker"
+                class="absolute top-0 left-0 w-full h-full opacity-0"
+                phx-change="date_selected"
+              />
+            </div>
+            <span phx-click="clear_date" class="ml-2"><i class="fa fa-times"></i></span>
+          </div>
+
+          <div
+            id="priority-container"
+            phx-hook="OutsideClickHook"
+            class="flex relative cursor-pointer items-center border-[0.5px] p-2 text-xs border-gray-500 rounded-md text-white"
+          >
+            <p phx-click="toggle_priority_list">
+              <%= if @selected_priority do %>
+                <i
+                  class={"fa fa-flag text-#{@selected_priority_color}"}
+                  class="mr-2"
+                  aria-hidden="true"
+                >
+                </i>
+                {@selected_priority}
+                <span phx-click="clear_priority" class="ml-2"><i class="fa fa-times"></i></span>
+              <% else %>
+                <i class="fa fa-flag" aria-hidden="true" class="mr-2"></i> Priority
+              <% end %>
+            </p>
+
+            <div :if={@show_priority_list} class="absolute top-10 left-0  w-[120px] h-full">
+              <.priority_list selected_priority={@selected_priority} />
+            </div>
+          </div>
+
+          <div class="flex items-center border border-gray-500 p-2 text-xs rounded-md text-white cursor-pointer">
+            <div
+              id="date-picker-container"
+              phx-hook="FlatpickrHookDateTime"
+              class="relative cursor-pointer"
+            >
+              <p id="togglePickerDateTime">
+                <span class="mr-2"><i class="fa fa-calendar"></i></span> {@selected_datetime ||
+                  "Reminders"}
+              </p>
+
+              <input
+                type="text"
+                id="datetimepicker"
+                class="absolute top-0 left-0 w-full h-full opacity-0"
+                phx-change="datetime_selected"
+              />
+            </div>
+            <span phx-click="clear_datetime" class="ml-2"><i class="fa fa-times"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <p class="flex w-[100%] bg-gray-500 h-[1px]" />
+
+      <div class="flex gap-2  p-2 justify-end text-gray-500 items-center">
+        <p>
+          Cancel
+        </p>
+
+        <button
+          class="bg-dark_purple flex justify-center items-center text-xs  p-2 rounded-md text-white"
+          phx-disable-with="Saving..."
+        >
+          Save Todo
+        </button>
+      </div>
+    </.simple_new_todo_form>
+    """
+  end
+
+  def priority_list(assigns) do
+    ~H"""
+    <div class="bg-white p-2 text-sm rounded-md text-black">
+      <%= for priority <- priorities() do %>
+        <p phx-click="select_priority" phx-value-priority-name={priority.name} class="cursor-pointer">
+          <i class={"fa fa-flag text-#{priority.color}"} aria-hidden="true"></i> {priority.name}
+          <i
+            :if={@selected_priority == priority.name}
+            class="fa fa-check text-green-500"
+            aria-hidden="true"
+          >
+          </i>
+        </p>
+      <% end %>
+    </div>
     """
   end
 
@@ -93,6 +204,27 @@ defmodule VirgilErpWeb.TodosComponents do
       },
       %{
         name: "Sun 29"
+      }
+    ]
+  end
+
+  defp priorities do
+    [
+      %{
+        name: "Priority 1",
+        color: "red-500"
+      },
+      %{
+        name: "Priority 2",
+        color: "yellow-500"
+      },
+      %{
+        name: "Priority 3",
+        color: "blue-500"
+      },
+      %{
+        name: "Priority 4",
+        color: "gray-300"
       }
     ]
   end

@@ -3,3 +3,7 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+.flatpickr-calendar {
+  z-index: 9999; /* Ensure it overlays properly */
+}

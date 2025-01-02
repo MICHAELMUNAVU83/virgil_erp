@@ -22,80 +22,83 @@ defmodule VirgilErpWeb.Router do
 
     get "/", PageController, :home
 
-    live "/dashboard", DashboardLive, :index
+    live_session :current_user_pages,
+      on_mount: [{VirgilErpWeb.UserAuth, :mount_current_user}] do
+      live "/dashboard", DashboardLive, :index
 
-    live "/projects", ProjectLive.Index, :index
-    live "/projects/new", ProjectLive.Index, :new
-    live "/projects/:id/edit", ProjectLive.Index, :edit
+      live "/projects", ProjectLive.Index, :index
+      live "/projects/new", ProjectLive.Index, :new
+      live "/projects/:id/edit", ProjectLive.Index, :edit
 
-    live "/projects/:id", ProjectLive.Show, :show
-    live "/projects/:id/show/edit", ProjectLive.Show, :edit
+      live "/projects/:id", ProjectLive.Show, :show
+      live "/projects/:id/show/edit", ProjectLive.Show, :edit
 
-    live "/access_emails", AccessEmailLive.Index, :index
-    live "/access_emails/new", AccessEmailLive.Index, :new
-    live "/access_emails/:id/edit", AccessEmailLive.Index, :edit
+      live "/access_emails", AccessEmailLive.Index, :index
+      live "/access_emails/new", AccessEmailLive.Index, :new
+      live "/access_emails/:id/edit", AccessEmailLive.Index, :edit
 
-    live "/access_emails/:id", AccessEmailLive.Show, :show
-    live "/access_emails/:id/show/edit", AccessEmailLive.Show, :edit
+      live "/access_emails/:id", AccessEmailLive.Show, :show
+      live "/access_emails/:id/show/edit", AccessEmailLive.Show, :edit
 
-    live "/project_tasks", ProjectTaskLive.Index, :index
-    live "/project_tasks/new", ProjectTaskLive.Index, :new
-    live "/project_tasks/:id/edit", ProjectTaskLive.Index, :edit
+      live "/project_tasks", ProjectTaskLive.Index, :index
+      live "/project_tasks/new", ProjectTaskLive.Index, :new
+      live "/project_tasks/:id/edit", ProjectTaskLive.Index, :edit
 
-    live "/project_tasks/:id", ProjectTaskLive.Show, :show
-    live "/project_tasks/:id/show/edit", ProjectTaskLive.Show, :edit
+      live "/project_tasks/:id", ProjectTaskLive.Show, :show
+      live "/project_tasks/:id/show/edit", ProjectTaskLive.Show, :edit
 
-    live "/project_task_assignees", ProjectTaskAssigneeLive.Index, :index
-    live "/project_task_assignees/new", ProjectTaskAssigneeLive.Index, :new
-    live "/project_task_assignees/:id/edit", ProjectTaskAssigneeLive.Index, :edit
+      live "/project_task_assignees", ProjectTaskAssigneeLive.Index, :index
+      live "/project_task_assignees/new", ProjectTaskAssigneeLive.Index, :new
+      live "/project_task_assignees/:id/edit", ProjectTaskAssigneeLive.Index, :edit
 
-    live "/project_task_assignees/:id", ProjectTaskAssigneeLive.Show, :show
-    live "/project_task_assignees/:id/show/edit", ProjectTaskAssigneeLive.Show, :edit
+      live "/project_task_assignees/:id", ProjectTaskAssigneeLive.Show, :show
+      live "/project_task_assignees/:id/show/edit", ProjectTaskAssigneeLive.Show, :edit
 
-    live "/project_task_comments", ProjectTaskCommentLive.Index, :index
-    live "/project_task_comments/new", ProjectTaskCommentLive.Index, :new
-    live "/project_task_comments/:id/edit", ProjectTaskCommentLive.Index, :edit
+      live "/project_task_comments", ProjectTaskCommentLive.Index, :index
+      live "/project_task_comments/new", ProjectTaskCommentLive.Index, :new
+      live "/project_task_comments/:id/edit", ProjectTaskCommentLive.Index, :edit
 
-    live "/project_task_comments/:id", ProjectTaskCommentLive.Show, :show
-    live "/project_task_comments/:id/show/edit", ProjectTaskCommentLive.Show, :edit
+      live "/project_task_comments/:id", ProjectTaskCommentLive.Show, :show
+      live "/project_task_comments/:id/show/edit", ProjectTaskCommentLive.Show, :edit
 
-    live "/client_contracts", ClientContractLive.Index, :index
-    live "/client_contracts/new", ClientContractLive.Index, :new
-    live "/client_contracts/:id/edit", ClientContractLive.Index, :edit
+      live "/client_contracts", ClientContractLive.Index, :index
+      live "/client_contracts/new", ClientContractLive.Index, :new
+      live "/client_contracts/:id/edit", ClientContractLive.Index, :edit
 
-    live "/client_contracts/:id", ClientContractLive.Show, :show
-    live "/client_contracts/:id/show/edit", ClientContractLive.Show, :edit
-    live "/invoices", InvoiceLive.Index, :index
-    live "/invoices/new", InvoiceLive.Index, :new
-    live "/invoices/:id/edit", InvoiceLive.Index, :edit
+      live "/client_contracts/:id", ClientContractLive.Show, :show
+      live "/client_contracts/:id/show/edit", ClientContractLive.Show, :edit
+      live "/invoices", InvoiceLive.Index, :index
+      live "/invoices/new", InvoiceLive.Index, :new
+      live "/invoices/:id/edit", InvoiceLive.Index, :edit
 
-    live "/invoices/:id", InvoiceLive.Show, :show
-    live "/invoices/:id/show/edit", InvoiceLive.Show, :edit
-    live "/revenues", RevenueLive.Index, :index
-    live "/revenues/new", RevenueLive.Index, :new
-    live "/revenues/:id/edit", RevenueLive.Index, :edit
+      live "/invoices/:id", InvoiceLive.Show, :show
+      live "/invoices/:id/show/edit", InvoiceLive.Show, :edit
+      live "/revenues", RevenueLive.Index, :index
+      live "/revenues/new", RevenueLive.Index, :new
+      live "/revenues/:id/edit", RevenueLive.Index, :edit
 
-    live "/revenues/:id", RevenueLive.Show, :show
-    live "/revenues/:id/show/edit", RevenueLive.Show, :edit
-    live "/expenses", ExpenseLive.Index, :index
-    live "/expenses/new", ExpenseLive.Index, :new
-    live "/expenses/:id/edit", ExpenseLive.Index, :edit
+      live "/revenues/:id", RevenueLive.Show, :show
+      live "/revenues/:id/show/edit", RevenueLive.Show, :edit
+      live "/expenses", ExpenseLive.Index, :index
+      live "/expenses/new", ExpenseLive.Index, :new
+      live "/expenses/:id/edit", ExpenseLive.Index, :edit
 
-    live "/expenses/:id", ExpenseLive.Show, :show
-    live "/expenses/:id/show/edit", ExpenseLive.Show, :edit
+      live "/expenses/:id", ExpenseLive.Show, :show
+      live "/expenses/:id/show/edit", ExpenseLive.Show, :edit
 
-    live "/proposals", ProposalLive.Index, :index
-    live "/proposals/new", ProposalLive.Index, :new
-    live "/proposals/:id/edit", ProposalLive.Index, :edit
+      live "/proposals", ProposalLive.Index, :index
+      live "/proposals/new", ProposalLive.Index, :new
+      live "/proposals/:id/edit", ProposalLive.Index, :edit
 
-    live "/proposals/:id", ProposalLive.Show, :show
-    live "/proposals/:id/show/edit", ProposalLive.Show, :edit
-    live "/todos", TodoLive.Index, :index
-    live "/todos/new", TodoLive.Index, :new
-    live "/todos/:id/edit", TodoLive.Index, :edit
+      live "/proposals/:id", ProposalLive.Show, :show
+      live "/proposals/:id/show/edit", ProposalLive.Show, :edit
+      live "/todos", TodoLive.Index, :index
+      live "/todos/new", TodoLive.Index, :new
+      live "/todos/:id/edit", TodoLive.Index, :edit
 
-    live "/todos/:id", TodoLive.Show, :show
-    live "/todos/:id/show/edit", TodoLive.Show, :edit
+      live "/todos/:id", TodoLive.Show, :show
+      live "/todos/:id/show/edit", TodoLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.

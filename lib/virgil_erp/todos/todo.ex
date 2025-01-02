@@ -4,13 +4,11 @@ defmodule VirgilErp.Todos.Todo do
 
   schema "todos" do
     field :description, :string
-    field :due_by, :utc_datetime
+    field :due_by, :date
     field :is_completed, :boolean, default: false
     field :name, :string
     field :remind_at, :utc_datetime
-    field :remind_by, :utc_datetime
-    field :assignee_id, :id
-    field :assigneer_id, :id
+    belongs_to :user, VirgilErp.Users.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -18,7 +16,14 @@ defmodule VirgilErp.Todos.Todo do
   @doc false
   def changeset(todo, attrs) do
     todo
-    |> cast(attrs, [:name, :description, :due_by, :remind_at, :remind_by, :is_completed, :assignee_id, :assigneer_id])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :due_by,
+      :remind_at,
+      :is_completed,
+      :user_id
+    ])
     |> validate_required([:name, :description, :is_completed])
   end
 end

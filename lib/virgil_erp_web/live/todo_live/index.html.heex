@@ -50,6 +50,11 @@
 <.new_todo_component
   if={@live_action == :new}
   id={:new}
+  selected_date={@selected_date}
+  selected_datetime={@selected_datetime}
+  selected_priority={@selected_priority}
+  selected_priority_color={@selected_priority_color}
+  show_priority_list={@show_priority_list}
   title={@page_title}
   form={@form}
   action={@live_action}

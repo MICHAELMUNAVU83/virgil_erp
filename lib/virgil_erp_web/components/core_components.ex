@@ -212,6 +212,29 @@ defmodule VirgilErpWeb.CoreComponents do
     """
   end
 
+  attr :for, :any, required: true, doc: "the data structure for the form"
+  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+
+  attr :rest, :global,
+    include: ~w(autocomplete name rel action enctype method novalidate target multipart),
+    doc: "the arbitrary HTML attributes to apply to the form tag"
+
+  slot :inner_block, required: true
+  slot :actions, doc: "the slot for form actions, such as a submit button"
+
+  def simple_new_todo_form(assigns) do
+    ~H"""
+    <.form :let={f} for={@for} as={@as} {@rest}>
+      <div class="">
+        {render_slot(@inner_block, f)}
+        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+          {render_slot(action, f)}
+        </div>
+      </div>
+    </.form>
+    """
+  end
+
   @doc """
   Renders a button.
 
@@ -383,6 +406,50 @@ defmodule VirgilErpWeb.CoreComponents do
         ]}
         {@rest}
       />
+      <.error :for={msg <- @errors}>{msg}</.error>
+    </div>
+    """
+  end
+
+  attr :id, :any, default: nil
+  attr :name, :any
+  attr :label, :string, default: nil
+  attr :value, :any, default: nil
+  attr :class, :string, default: nil
+
+  attr :type, :string,
+    default: "text",
+    values: ~w(checkbox color date datetime-local email file month number password
+               range search select tel text textarea time url week)
+
+  attr :field, Phoenix.HTML.FormField,
+    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+
+  attr :errors, :list, default: []
+  attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
+  attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
+  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+
+  attr :rest, :global,
+    include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
+                           multiple pattern placeholder readonly required rows size step)
+
+  def new_todo_input(%{type: "textarea"} = assigns) do
+    ~H"""
+    <div>
+      <.label for={@id}>{@label}</.label>
+      <textarea id={@id} name={@name} class={@class} {@rest}><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      <.error :for={msg <- @errors}>{msg}</.error>
+    </div>
+    """
+  end
+
+  def new_todo_input(assigns) do
+    ~H"""
+    <div>
+      <.label>{@label}</.label>
+      <input type={@type} name={@name} class={@class} {@rest} />
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """

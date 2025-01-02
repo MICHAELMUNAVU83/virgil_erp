@@ -137,6 +137,76 @@ Hooks.TestEachProject = {
   },
 };
 
+Hooks.FlatpickrHook = {
+  mounted() {
+    const toggleButton = this.el.querySelector("#togglePicker");
+    const dateInput = this.el.querySelector("#datepicker");
+
+    // Initialize Flatpickr on the hidden input
+    this.flatpickrInstance = flatpickr(dateInput, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      onChange: (selectedDates, dateStr) => {
+        this.pushEvent("date_selected", { value: dateStr });
+      },
+    });
+
+    // Show the Flatpickr input when clicking the label
+    toggleButton.addEventListener("click", () => {
+      this.flatpickrInstance.open(); // Open Flatpickr without altering the layout
+    });
+  },
+
+  destroyed() {
+    if (this.flatpickrInstance) {
+      this.flatpickrInstance.destroy();
+    }
+  },
+};
+
+Hooks.OutsideClickHook = {
+  mounted() {
+    // Add a click listener to the document
+    this.handleOutsideClick = (event) => {
+      if (!this.el.contains(event.target)) {
+        this.pushEvent("clear_priority_list");
+      }
+    };
+
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+
+  destroyed() {
+    // Remove the click listener when the hook is destroyed
+    document.removeEventListener("click", this.handleOutsideClick);
+  },
+};
+Hooks.FlatpickrHookDateTime = {
+  mounted() {
+    const toggleButton = this.el.querySelector("#togglePickerDateTime");
+    const dateInput = this.el.querySelector("#datetimepicker");
+
+    // Initialize Flatpickr on the hidden input
+    this.flatpickrInstance = flatpickr(dateInput, {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      onChange: (selectedDates, dateStr) => {
+        this.pushEvent("datetime_selected", { value: dateStr });
+      },
+    });
+
+    toggleButton.addEventListener("click", () => {
+      this.flatpickrInstance.open(); // Open Flatpickr without altering the layout
+    });
+  },
+
+  destroyed() {
+    if (this.flatpickrInstance) {
+      this.flatpickrInstance.destroy();
+    }
+  },
+};
+
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
 window.addEventListener("phx:page-loading-start", (_info) => topbar.show(300));
