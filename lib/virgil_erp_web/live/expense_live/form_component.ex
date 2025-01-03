@@ -23,7 +23,13 @@ defmodule VirgilErpWeb.ExpenseLive.FormComponent do
         <.input field={@form[:reason]} type="text" label="Reason" />
         <.input field={@form[:paid_at]} type="date" label="Paid at" />
 
-        <.live_file_input upload={@uploads.attached_receipt} />
+        <div class="flex flex-col gap-1 ">
+          <p class="block text-sm ml-2 font-semibold leading-6 text-white">
+            Attach Receipt
+          </p>
+
+          <.live_file_input upload={@uploads.attached_receipt} />
+        </div>
 
         <%= if @action == :edit && @expense.attached_receipt && @expense.attached_receipt != nil do %>
           <%= if is_receipt_an_image?(@expense.attached_receipt) do %>
@@ -31,14 +37,25 @@ defmodule VirgilErpWeb.ExpenseLive.FormComponent do
               <p class="poppins-bold">
                 Current Image:
               </p>
-              <img src={@expense.attached_receipt} class="h-[200px] w-[200px] object-cover" />
+              <div class="flex items-end gap-2">
+                <img src={@expense.attached_receipt} class="h-[200px] w-[200px] object-contain" />
+
+                <i
+                  class=" fa fa-trash text-red-500 cursor-pointer"
+                  phx-click="delete_attachment"
+                  phx-target={@myself}
+                  data-confirm="Are you sure?"
+                  aria-label="delete"
+                >
+                </i>
+              </div>
             </div>
           <% else %>
             <div>
               <p class="poppins-bold">
                 PDF Added
               </p>
-              <div class="mt-4">
+              <div class="mt-4 flex gap-3 items-center">
                 <a
                   href={@expense.attached_receipt}
                   download
@@ -46,6 +63,15 @@ defmodule VirgilErpWeb.ExpenseLive.FormComponent do
                 >
                   <i class="fa fa-download"></i> Download PDF
                 </a>
+
+                <i
+                  class=" fa fa-trash text-red-500 cursor-pointer"
+                  phx-click="delete_attachment"
+                  phx-target={@myself}
+                  data-confirm="Are you sure?"
+                  aria-label="delete"
+                >
+                </i>
               </div>
             </div>
           <% end %>
@@ -110,6 +136,19 @@ defmodule VirgilErpWeb.ExpenseLive.FormComponent do
   def handle_event("validate", %{"expense" => expense_params}, socket) do
     changeset = Expenses.change_expense(socket.assigns.expense, expense_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+  end
+
+  def handle_event("delete_attachment", _params, socket) do
+    File.rm(socket.assigns.expense.attached_receipt)
+
+    {:ok, expense} = Expenses.update_expense(socket.assigns.expense, %{attached_receipt: nil})
+
+    {:noreply,
+     socket
+     |> assign(:expense, expense)
+     |> assign_new(:form, fn ->
+       to_form(Expenses.change_expense(expense))
+     end)}
   end
 
   def handle_event("cancel-upload", %{"ref" => ref}, socket) do

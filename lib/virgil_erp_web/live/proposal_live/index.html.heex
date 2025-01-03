@@ -1,43 +1,113 @@
-<.header>
-  Listing Proposals
-  <:actions>
-    <.link patch={~p"/proposals/new"}>
-      <.button>New Proposal</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="flex justify-between items-center">
+  <p class="text-xl font-semibold text-white">
+    All Proposals
+  </p>
 
-<.table
-  id="proposals"
-  rows={@streams.proposals}
-  row_click={fn {_id, proposal} -> JS.navigate(~p"/proposals/#{proposal}") end}
->
-  <:col :let={{_id, proposal}} label="Client"><%= proposal.client %></:col>
-  <:col :let={{_id, proposal}} label="Pdf attachment"><%= proposal.pdf_attachment %></:col>
-  <:col :let={{_id, proposal}} label="Link attachment"><%= proposal.link_attachment %></:col>
-  <:col :let={{_id, proposal}} label="Client type"><%= proposal.client_type %></:col>
-  <:col :let={{_id, proposal}} label="Description"><%= proposal.description %></:col>
-  <:action :let={{_id, proposal}}>
-    <div class="sr-only">
-      <.link navigate={~p"/proposals/#{proposal}"}>Show</.link>
-    </div>
-    <.link patch={~p"/proposals/#{proposal}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, proposal}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: proposal.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+  <.link patch={~p"/proposals/new"}>
+    <div
+      class="flex mt-4 bg-dark_purple p-2 rounded-md   font-medium text-white cursor-pointer  gap-2 items-center"
+      phx-click="show_new_todo_form"
     >
-      Delete
-    </.link>
-  </:action>
-</.table>
+      +
 
-<.modal :if={@live_action in [:new, :edit]} id="proposal-modal" show on_cancel={JS.patch(~p"/proposals")}>
+      Add Proposal
+    </div>
+  </.link>
+</div>
+
+<div class="w-[100%] mt-4">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-7">
+    <p>
+      Client
+    </p>
+
+    <p>
+      Client Type
+    </p>
+
+    <p>
+      Description
+    </p>
+    <p>
+      Link
+    </p>
+    <p>
+      Pdf
+    </p>
+
+    <p>
+      Paid At
+    </p>
+
+    <p>
+      Action
+    </p>
+  </div>
+
+  <div class="flex flex-col w-[100%] gap-1">
+    <%= for proposal <- @proposals do %>
+      <div class="flex flex-col w-[100%] gap-1">
+        <div class="grid grid-cols-7 text-center py-3 text-white">
+          <p>
+            {proposal.client}
+          </p>
+          <p>
+            {proposal.client_type}
+          </p>
+          <p>
+            {proposal.description}
+          </p>
+          <p>
+            <a
+              :if={proposal.link_attachment}
+              href={proposal.link_attachment}
+              target="_blank"
+              class="text-dark_purple underline "
+            >
+              View Link
+            </a>
+          </p>
+          <p>
+            <a
+              :if={proposal.pdf_attachment}
+              href={proposal.pdf_attachment}
+              download
+              class="bg-dark_purple text-white px-4 py-2 rounded-md"
+            >
+              <i class="fa fa-download"></i> Download
+            </a>
+          </p>
+
+          <p>
+            {proposal.user.email}
+          </p>
+          <div class="flex gap-5 justify-center items-center">
+            <.link patch={~p"/proposals/#{proposal.id}/edit"}>
+              <i class="fa fa-pencil" />
+            </.link>
+
+            <.link phx-click="delete" phx-value-id={proposal.id} data-confirm="Are you sure?">
+              <i class="fa fa-trash" />
+            </.link>
+          </div>
+        </div>
+        <p class="bg-gray-500 h-[0.5px] w-[100%]" />
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="proposal-modal"
+  show
+  on_cancel={JS.patch(~p"/proposals")}
+>
   <.live_component
     module={VirgilErpWeb.ProposalLive.FormComponent}
     id={@proposal.id || :new}
     title={@page_title}
+    current_user={@current_user}
     action={@live_action}
     proposal={@proposal}
     patch={~p"/proposals"}

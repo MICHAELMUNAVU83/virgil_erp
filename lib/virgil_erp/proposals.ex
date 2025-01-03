@@ -19,6 +19,7 @@ defmodule VirgilErp.Proposals do
   """
   def list_proposals do
     Repo.all(Proposal)
+    |> Repo.preload(:user)
   end
 
   @doc """

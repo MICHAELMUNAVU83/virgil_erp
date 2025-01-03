@@ -6,7 +6,9 @@ defmodule VirgilErpWeb.ProposalLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :proposals, Proposals.list_proposals())}
+    {:ok,
+     socket
+     |> assign(:proposals, Proposals.list_proposals())}
   end
 
   @impl true
@@ -42,6 +44,8 @@ defmodule VirgilErpWeb.ProposalLive.Index do
     proposal = Proposals.get_proposal!(id)
     {:ok, _} = Proposals.delete_proposal(proposal)
 
-    {:noreply, stream_delete(socket, :proposals, proposal)}
+    {:noreply,
+     socket
+     |> assign(:proposals, Proposals.list_proposals())}
   end
 end
