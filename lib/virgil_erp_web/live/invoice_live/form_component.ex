@@ -19,6 +19,7 @@ defmodule VirgilErpWeb.InvoiceLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:invoice_id]} type="text" label="Invoice ID" />
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:client]} type="text" label="Client" />
         <.input

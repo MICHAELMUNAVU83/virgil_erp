@@ -5,6 +5,7 @@ defmodule VirgilErp.Repo.Migrations.CreateInvoices do
     create table(:invoices) do
       add :amount, :float
       add :client, :string
+      add :invoice_id, :string
       add :pdf_attachment, :text
       add :is_paid, :boolean, default: false, null: false
       add :user_id, references(:users, on_delete: :nothing)

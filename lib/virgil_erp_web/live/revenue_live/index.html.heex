@@ -1,44 +1,121 @@
-<.header>
-  Listing Revenues
-  <:actions>
-    <.link patch={~p"/revenues/new"}>
-      <.button>New Revenue</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="flex justify-between items-center">
+  <p class="text-xl font-semibold text-white">
+    All Revenues
+  </p>
 
-<.table
-  id="revenues"
-  rows={@streams.revenues}
-  row_click={fn {_id, revenue} -> JS.navigate(~p"/revenues/#{revenue}") end}
->
-  <:col :let={{_id, revenue}} label="Amount"><%= revenue.amount %></:col>
-  <:col :let={{_id, revenue}} label="Paid through"><%= revenue.paid_through %></:col>
-  <:col :let={{_id, revenue}} label="Reason"><%= revenue.reason %></:col>
-  <:col :let={{_id, revenue}} label="Paid at"><%= revenue.paid_at %></:col>
-  <:action :let={{_id, revenue}}>
-    <div class="sr-only">
-      <.link navigate={~p"/revenues/#{revenue}"}>Show</.link>
-    </div>
-    <.link patch={~p"/revenues/#{revenue}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, revenue}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: revenue.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+  <.link patch={~p"/revenues/new"}>
+    <div
+      class="flex mt-4 bg-dark_purple p-2 rounded-md   font-medium text-white cursor-pointer  gap-2 items-center"
+      phx-click="show_new_todo_form"
     >
-      Delete
-    </.link>
-  </:action>
-</.table>
+      +
 
-<.modal :if={@live_action in [:new, :edit]} id="revenue-modal" show on_cancel={JS.patch(~p"/revenues")}>
+      Add Revenue
+    </div>
+  </.link>
+</div>
+
+<div class="w-[100%] mt-4">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-8">
+    <p>
+      Amount
+    </p>
+
+    <p>
+      Paid At
+    </p>
+
+    <p>
+      Paid Through
+    </p>
+
+    <p>
+      Reason
+    </p>
+
+    <p>
+      Added By
+    </p>
+
+    <p>
+      Project
+    </p>
+
+    <p>
+      Invoice
+    </p>
+
+    <p>
+      Actions
+    </p>
+  </div>
+
+  <div class="flex flex-col w-[100%] gap-1">
+    <%= for revenue <- @revenues do %>
+      <div class="flex flex-col w-[100%] gap-1">
+        <div class="grid grid-cols-8 text-center my-2 text-white">
+          <p>
+            {revenue.amount} KES /=
+          </p>
+          <p>
+            {DateFormatter.format_date_to_short(revenue.paid_at)}
+          </p>
+          <p>
+            {revenue.paid_through}
+          </p>
+
+          <p>
+            {revenue.reason}
+          </p>
+
+          <p>
+            {revenue.user.email}
+          </p>
+
+          <p>
+            {revenue.project && revenue.project.name}
+          </p>
+
+          <p>
+            <a
+              :if={revenue.invoice}
+              href={revenue.invoice.pdf_attachment}
+              download
+              class="bg-dark_purple text-white px-4 py-2 rounded-md"
+            >
+              <i class="fa fa-download"></i> Download
+            </a>
+          </p>
+
+          <div class="flex gap-5 justify-center items-center ">
+            <.link patch={~p"/revenues/#{revenue.id}/edit"}>
+              <i class="fa fa-pencil" />
+            </.link>
+
+            <.link phx-click="delete" phx-value-id={revenue.id} data-confirm="Are you sure?">
+              <i class="fa fa-trash" />
+            </.link>
+          </div>
+        </div>
+        <p class="bg-gray-500 h-[0.5px] w-[100%]" />
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="revenue-modal"
+  show
+  on_cancel={JS.patch(~p"/revenues")}
+>
   <.live_component
     module={VirgilErpWeb.RevenueLive.FormComponent}
     id={@revenue.id || :new}
     title={@page_title}
     action={@live_action}
     revenue={@revenue}
+    current_user={@current_user}
     patch={~p"/revenues"}
   />
 </.modal>

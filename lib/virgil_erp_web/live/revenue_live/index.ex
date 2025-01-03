@@ -3,10 +3,13 @@ defmodule VirgilErpWeb.RevenueLive.Index do
 
   alias VirgilErp.Revenues
   alias VirgilErp.Revenues.Revenue
+  alias VirgilErp.DateFormatter
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :revenues, Revenues.list_revenues())}
+    {:ok,
+     socket
+     |> assign(:revenues, Revenues.list_revenues())}
   end
 
   @impl true
@@ -30,11 +33,6 @@ defmodule VirgilErpWeb.RevenueLive.Index do
     socket
     |> assign(:page_title, "Listing Revenues")
     |> assign(:revenue, nil)
-  end
-
-  @impl true
-  def handle_info({VirgilErpWeb.RevenueLive.FormComponent, {:saved, revenue}}, socket) do
-    {:noreply, stream_insert(socket, :revenues, revenue)}
   end
 
   @impl true

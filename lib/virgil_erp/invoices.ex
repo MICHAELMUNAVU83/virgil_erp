@@ -22,6 +22,11 @@ defmodule VirgilErp.Invoices do
     |> Repo.preload([:user, :project])
   end
 
+  def list_invoices_for_selection do
+    from(i in Invoice, select: {i.invoice_id, i.id})
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single invoice.
 

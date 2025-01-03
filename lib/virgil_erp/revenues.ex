@@ -19,6 +19,7 @@ defmodule VirgilErp.Revenues do
   """
   def list_revenues do
     Repo.all(Revenue)
+    |> Repo.preload([:user, :project, :invoice])
   end
 
   @doc """

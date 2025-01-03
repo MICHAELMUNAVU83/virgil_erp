@@ -2,14 +2,15 @@ defmodule VirgilErpWeb.RevenueLive.FormComponent do
   use VirgilErpWeb, :live_component
 
   alias VirgilErp.Revenues
+  alias VirgilErp.Projects
+  alias VirgilErp.Invoices
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage revenue records in your database.</:subtitle>
+      <.header class="ml-2">
+        {@title}
       </.header>
 
       <.simple_form
@@ -21,8 +22,22 @@ defmodule VirgilErpWeb.RevenueLive.FormComponent do
       >
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:paid_through]} type="text" label="Paid through" />
-        <.input field={@form[:reason]} type="text" label="Reason" />
-        <.input field={@form[:paid_at]} type="date" label="Paid at" />
+        <.input field={@form[:reason]} type="textarea" label="Reason" />
+        <.input field={@form[:paid_at]} type="date" label="Paid At" />
+        <.input
+          field={@form[:project_id]}
+          type="select"
+          options={@projects}
+          label="Project"
+          prompt="Select Project"
+        />
+        <.input
+          field={@form[:invoice_id]}
+          type="select"
+          options={@invoices}
+          label="Project"
+          prompt="Select Project"
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Revenue</.button>
         </:actions>
@@ -36,6 +51,8 @@ defmodule VirgilErpWeb.RevenueLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:projects, Projects.list_projects_for_selection())
+     |> assign(:invoices, Invoices.list_invoices_for_selection())
      |> assign_new(:form, fn ->
        to_form(Revenues.change_revenue(revenue))
      end)}
@@ -48,6 +65,7 @@ defmodule VirgilErpWeb.RevenueLive.FormComponent do
   end
 
   def handle_event("save", %{"revenue" => revenue_params}, socket) do
+    revenue_params = Map.put(revenue_params, "user_id", socket.assigns.current_user.id)
     save_revenue(socket, socket.assigns.action, revenue_params)
   end
 
