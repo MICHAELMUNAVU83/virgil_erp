@@ -7,3 +7,21 @@
 .flatpickr-calendar {
   z-index: 9999; /* Ensure it overlays properly */
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: white; /* Change the icon color */
+  filter: invert(1); /* Invert colors for white effect */
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+  display: none; /* Hide spin buttons if visible */
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  color: white; /* Change the icon color */
+  filter: invert(1); /* Invert colors for white effect */
+}
+
+input[type="datetime-local"]::-webkit-inner-spin-button {
+  display: none; /* Hide spin buttons if visible */
+}

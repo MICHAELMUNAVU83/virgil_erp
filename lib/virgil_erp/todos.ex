@@ -21,6 +21,14 @@ defmodule VirgilErp.Todos do
     Repo.all(Todo)
   end
 
+  def list_todos_for_a_user_and_date(user_id, date) do
+    Repo.all(
+      from(t in Todo,
+        where: t.user_id == ^user_id and t.due_by == ^date and t.is_completed == false
+      )
+    )
+  end
+
   @doc """
   Gets a single todo.
 

@@ -8,7 +8,7 @@ defmodule VirgilErp.Todos.Todo do
     field :is_completed, :boolean, default: false
     field :name, :string
     field :remind_at, :utc_datetime
-    belongs_to :user, VirgilErp.Users.User, foreign_key: :user_id
+    belongs_to :user, VirgilErp.Accounts.User, foreign_key: :user_id
 
     timestamps(type: :utc_datetime)
   end
@@ -24,6 +24,6 @@ defmodule VirgilErp.Todos.Todo do
       :is_completed,
       :user_id
     ])
-    |> validate_required([:name, :description, :is_completed])
+    |> validate_required([:name, :is_completed, :user_id])
   end
 end

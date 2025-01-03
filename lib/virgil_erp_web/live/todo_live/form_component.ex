@@ -7,9 +7,8 @@ defmodule VirgilErpWeb.TodoLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage todo records in your database.</:subtitle>
+      <.header class="ml-2">
+        {@title}
       </.header>
 
       <.simple_form
@@ -20,14 +19,17 @@ defmodule VirgilErpWeb.TodoLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:due_by]} type="datetime-local" label="Due by" />
-        <.input field={@form[:remind_at]} type="datetime-local" label="Remind at" />
-        <.input field={@form[:remind_by]} type="datetime-local" label="Remind by" />
-        <.input field={@form[:is_completed]} type="checkbox" label="Is completed" />
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Todo</.button>
-        </:actions>
+        <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:due_by]} type="date" label="Due By" />
+        <.input field={@form[:remind_at]} type="datetime-local" label="Remind Me At" />
+        <.input field={@form[:is_completed]} type="checkbox" label="Todo Completed" />
+
+        <button
+          class="bg-dark_purple flex justify-center items-center   p-2 rounded-md text-white"
+          phx-disable-with="Saving..."
+        >
+          Save Todo
+        </button>
       </.simple_form>
     </div>
     """

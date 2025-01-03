@@ -1,54 +1,11 @@
-<%!-- <.header>
-  Listing Todos
-  <:actions>
-    <.link patch={~p"/todos/new"}>
-      <.button>New Todo</.button>
-    </.link>
-  </:actions>
-</.header>
-
-<.table
-  id="todos"
-  rows={@streams.todos}
-  row_click={fn {_id, todo} -> JS.navigate(~p"/todos/#{todo}") end}
->
-  <:col :let={{_id, todo}} label="Name"><%= todo.name %></:col>
-  <:col :let={{_id, todo}} label="Description"><%= todo.description %></:col>
-  <:col :let={{_id, todo}} label="Due by"><%= todo.due_by %></:col>
-  <:col :let={{_id, todo}} label="Remind at"><%= todo.remind_at %></:col>
-  <:col :let={{_id, todo}} label="Remind by"><%= todo.remind_by %></:col>
-  <:col :let={{_id, todo}} label="Is completed"><%= todo.is_completed %></:col>
-  <:action :let={{_id, todo}}>
-    <div class="sr-only">
-      <.link navigate={~p"/todos/#{todo}"}>Show</.link>
-    </div>
-    <.link patch={~p"/todos/#{todo}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, todo}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: todo.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
-
-<.modal :if={@live_action in [:new, :edit]} id="todo-modal" show on_cancel={JS.patch(~p"/todos")}>
-  <.live_component
-    module={VirgilErpWeb.TodoLive.FormComponent}
-    id={@todo.id || :new}
-    title={@page_title}
-    action={@live_action}
-    todo={@todo}
-    patch={~p"/todos"}
-  />
-</.modal> --%>
-
-<.todos_component />
+<.todos_component
+  todos={@todos}
+  dates_for_selection={@dates_for_selection}
+  active_date={@active_date}
+/>
 
 <.new_todo_component
-  if={@live_action == :new}
+  :if={@show_new_todo_form}
   id={:new}
   selected_date={@selected_date}
   selected_datetime={@selected_datetime}
@@ -61,3 +18,14 @@
   todo={@todo}
   patch={~p"/todos"}
 />
+
+<.modal :if={@live_action in [:edit]} id="todo-edit-modal" show on_cancel={JS.patch(~p"/todos")}>
+  <.live_component
+    module={VirgilErpWeb.TodoLive.FormComponent}
+    id={:new}
+    title={@page_title}
+    action={@live_action}
+    todo={@todo}
+    patch={~p"/todos"}
+  />
+</.modal>

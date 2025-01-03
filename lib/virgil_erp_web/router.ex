@@ -93,11 +93,7 @@ defmodule VirgilErpWeb.Router do
       live "/proposals/:id", ProposalLive.Show, :show
       live "/proposals/:id/show/edit", ProposalLive.Show, :edit
       live "/todos", TodoLive.Index, :index
-      live "/todos/new", TodoLive.Index, :new
       live "/todos/:id/edit", TodoLive.Index, :edit
-
-      live "/todos/:id", TodoLive.Show, :show
-      live "/todos/:id/show/edit", TodoLive.Show, :edit
     end
   end
 
