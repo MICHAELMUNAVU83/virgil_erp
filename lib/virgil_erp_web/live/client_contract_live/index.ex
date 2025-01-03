@@ -3,10 +3,13 @@ defmodule VirgilErpWeb.ClientContractLive.Index do
 
   alias VirgilErp.ClientContracts
   alias VirgilErp.ClientContracts.ClientContract
+  alias VirgilErp.DateFormatter
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :client_contracts, ClientContracts.list_client_contracts())}
+    {:ok,
+     socket
+     |> assign(:client_contracts, ClientContracts.list_client_contracts())}
   end
 
   @impl true
@@ -33,7 +36,10 @@ defmodule VirgilErpWeb.ClientContractLive.Index do
   end
 
   @impl true
-  def handle_info({VirgilErpWeb.ClientContractLive.FormComponent, {:saved, client_contract}}, socket) do
+  def handle_info(
+        {VirgilErpWeb.ClientContractLive.FormComponent, {:saved, client_contract}},
+        socket
+      ) do
     {:noreply, stream_insert(socket, :client_contracts, client_contract)}
   end
 

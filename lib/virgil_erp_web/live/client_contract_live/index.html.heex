@@ -1,44 +1,114 @@
-<.header>
-  Listing Client contracts
-  <:actions>
-    <.link patch={~p"/client_contracts/new"}>
-      <.button>New Client contract</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="flex justify-between items-center">
+  <p class="text-xl font-semibold text-white">
+    All Client Contracts
+  </p>
 
-<.table
-  id="client_contracts"
-  rows={@streams.client_contracts}
-  row_click={fn {_id, client_contract} -> JS.navigate(~p"/client_contracts/#{client_contract}") end}
->
-  <:col :let={{_id, client_contract}} label="Signed contract"><%= client_contract.signed_contract %></:col>
-  <:col :let={{_id, client_contract}} label="Date"><%= client_contract.date %></:col>
-  <:col :let={{_id, client_contract}} label="Client"><%= client_contract.client %></:col>
-  <:col :let={{_id, client_contract}} label="Description"><%= client_contract.description %></:col>
-  <:col :let={{_id, client_contract}} label="Template link"><%= client_contract.template_link %></:col>
-  <:action :let={{_id, client_contract}}>
-    <div class="sr-only">
-      <.link navigate={~p"/client_contracts/#{client_contract}"}>Show</.link>
+  <.link patch={~p"/client_contracts/new"}>
+    <div class="flex mt-4 bg-dark_purple p-2 rounded-md   font-medium text-white cursor-pointer  gap-2 items-center">
+      +
+
+      Add Client Contract
     </div>
-    <.link patch={~p"/client_contracts/#{client_contract}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, client_contract}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: client_contract.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
+  </.link>
+</div>
 
-<.modal :if={@live_action in [:new, :edit]} id="client_contract-modal" show on_cancel={JS.patch(~p"/client_contracts")}>
+<div class="w-[100%] mt-4">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-7">
+    <p>
+      Client
+    </p>
+
+    <p>
+      Date
+    </p>
+
+    <p>
+      Description
+    </p>
+    <p>
+      Link
+    </p>
+    <p>
+      Signed Contract
+    </p>
+
+    <p>
+      Added By
+    </p>
+
+    <p>
+      Actions
+    </p>
+  </div>
+
+  <div class="flex flex-col w-[100%] gap-1">
+    <%= for client_contract <- @client_contracts do %>
+      <div class="flex flex-col w-[100%] gap-1">
+        <div class="grid grid-cols-7 text-center py-3 text-white">
+          <p>
+            {client_contract.client}
+          </p>
+          <p>
+            {DateFormatter.format_date_to_short(client_contract.inserted_at)}
+          </p>
+          <p>
+            {client_contract.description}
+          </p>
+          <p>
+            <a
+              :if={client_contract.template_link}
+              href={client_contract.template_link}
+              target="_blank"
+              class="text-dark_purple underline "
+            >
+              View Link
+            </a>
+          </p>
+          <p>
+            <a
+              :if={client_contract.signed_contract}
+              href={client_contract.signed_contract}
+              download
+              class="bg-dark_purple text-white px-4 py-2 rounded-md"
+            >
+              <i class="fa fa-download"></i> Download
+            </a>
+          </p>
+
+          <p>
+            {client_contract.user.email}
+          </p>
+          <div class="flex gap-5 justify-center items-center">
+            <.link patch={~p"/client_contracts/#{client_contract.id}/edit"}>
+              <i class="fa fa-pencil" />
+            </.link>
+
+            <.link
+              phx-click="delete"
+              phx-value-id={client_contract.id}
+              data-confirm="Are you sure?"
+            >
+              <i class="fa fa-trash" />
+            </.link>
+          </div>
+        </div>
+        <p class="bg-gray-500 h-[0.5px] w-[100%]" />
+      </div>
+    <% end %>
+  </div>
+</div>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="client_contract-modal"
+  show
+  on_cancel={JS.patch(~p"/client_contracts")}
+>
   <.live_component
     module={VirgilErpWeb.ClientContractLive.FormComponent}
     id={@client_contract.id || :new}
     title={@page_title}
     action={@live_action}
+    current_user={@current_user}
     client_contract={@client_contract}
     patch={~p"/client_contracts"}
   />

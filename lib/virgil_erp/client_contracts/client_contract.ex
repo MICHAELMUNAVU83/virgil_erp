@@ -8,7 +8,7 @@ defmodule VirgilErp.ClientContracts.ClientContract do
     field :description, :string
     field :signed_contract, :string
     field :template_link, :string
-    field :user_id, :id
+    belongs_to :user, VirgilErp.Accounts.User
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +16,7 @@ defmodule VirgilErp.ClientContracts.ClientContract do
   @doc false
   def changeset(client_contract, attrs) do
     client_contract
-    |> cast(attrs, [:signed_contract, :date, :client, :description, :template_link])
-    |> validate_required([:signed_contract, :date, :client, :description, :template_link])
+    |> cast(attrs, [:signed_contract, :date, :client, :description, :template_link, :user_id])
+    |> validate_required([:client, :user_id])
   end
 end

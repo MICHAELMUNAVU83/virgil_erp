@@ -19,6 +19,7 @@ defmodule VirgilErp.ClientContracts do
   """
   def list_client_contracts do
     Repo.all(ClientContract)
+    |> Repo.preload(:user)
   end
 
   @doc """
