@@ -6,7 +6,7 @@ defmodule VirgilErp.Repo.Migrations.CreateExpenses do
       add :amount, :float
       add :reason, :text
       add :paid_at, :date
-      add :attached_recepit, :text
+      add :attached_receipt, :text
       add :user_id, references(:users, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)

@@ -62,7 +62,7 @@ defmodule VirgilErpWeb.TodosComponents do
 
   defp todo_component(assigns) do
     ~H"""
-    <div class="border-b-[1px] border-grey-500 p-2 ">
+    <div class="border-b-[1px] border-gray-500 p-2 ">
       <div class="flex gap-2 items-start ">
         <div
           class="w-[20px] h-[20px] mt-1 border-[1px] border-grey-500  cursor-pointer group rounded-full"

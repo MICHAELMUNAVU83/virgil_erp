@@ -19,6 +19,7 @@ defmodule VirgilErp.Expenses do
   """
   def list_expenses do
     Repo.all(Expense)
+    |> Repo.preload(:user)
   end
 
   @doc """

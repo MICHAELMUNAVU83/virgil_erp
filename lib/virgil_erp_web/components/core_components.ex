@@ -384,7 +384,7 @@ defmodule VirgilErpWeb.CoreComponents do
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}>{msg}</.error>
-      <p class="w-[100%] bg-white h-[1px] " />
+      <p class="w-[100%] bg-gray-500 h-[0.5px] " />
     </div>
     """
   end
@@ -408,7 +408,7 @@ defmodule VirgilErpWeb.CoreComponents do
       />
 
       <.error :for={msg <- @errors}>{msg}</.error>
-      <p class="w-[100%] bg-white h-[1px] " />
+      <p class="w-[100%] bg-gray-500 h-[0.5px] " />
     </div>
     """
   end

@@ -1,43 +1,90 @@
-<.header>
-  Listing Expenses
-  <:actions>
-    <.link patch={~p"/expenses/new"}>
-      <.button>New Expense</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="flex justify-between items-center">
+  <p class="text-xl font-semibold text-white">
+    All Expenses
+  </p>
 
-<.table
-  id="expenses"
-  rows={@streams.expenses}
-  row_click={fn {_id, expense} -> JS.navigate(~p"/expenses/#{expense}") end}
->
-  <:col :let={{_id, expense}} label="Amount"><%= expense.amount %></:col>
-  <:col :let={{_id, expense}} label="Reason"><%= expense.reason %></:col>
-  <:col :let={{_id, expense}} label="Paid at"><%= expense.paid_at %></:col>
-  <:col :let={{_id, expense}} label="Attached recepit"><%= expense.attached_recepit %></:col>
-  <:action :let={{_id, expense}}>
-    <div class="sr-only">
-      <.link navigate={~p"/expenses/#{expense}"}>Show</.link>
-    </div>
-    <.link patch={~p"/expenses/#{expense}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, expense}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: expense.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+  <.link patch={~p"/expenses/new"}>
+    <div
+      class="flex mt-4 bg-dark_purple p-2 rounded-md   font-medium text-white cursor-pointer  gap-2 items-center"
+      phx-click="show_new_todo_form"
     >
-      Delete
-    </.link>
-  </:action>
-</.table>
+      +
 
-<.modal :if={@live_action in [:new, :edit]} id="expense-modal" show on_cancel={JS.patch(~p"/expenses")}>
+      Add Expense
+    </div>
+  </.link>
+</div>
+
+<div class="w-[100%] mt-4">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-5">
+    <p>
+      Amount
+    </p>
+
+    <p>
+      Reason
+    </p>
+
+    <p>
+      Added By
+    </p>
+    <p>
+      Attached Receipt
+    </p>
+
+    <p>
+      Action
+    </p>
+  </div>
+
+  <div class="flex flex-col w-[100%] gap-1">
+    <%= for expense <- @expenses do %>
+      <div class="flex flex-col w-[100%] gap-1">
+        <div class="grid grid-cols-5 text-center my-2 text-white">
+          <p>
+            {expense.amount} KES /=
+          </p>
+          <p>
+            {expense.reason}
+          </p>
+          <p>
+            {expense.user.email}
+          </p>
+          <p>
+            <a
+              :if={expense.attached_receipt}
+              href={expense.attached_receipt}
+              download
+              class="bg-dark_purple text-white px-4 py-2 rounded-md"
+            >
+              <i class="fa fa-download"></i> Download
+            </a>
+          </p>
+          <p>
+            <.link patch={~p"/expenses/#{expense.id}/edit"}>
+              <i class="fa fa-eye" />
+              <span class="ml-2">View</span>
+            </.link>
+          </p>
+        </div>
+        <p class="bg-gray-500 h-[0.5px] w-[100%]" />
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="expense-modal"
+  show
+  on_cancel={JS.patch(~p"/expenses")}
+>
   <.live_component
     module={VirgilErpWeb.ExpenseLive.FormComponent}
     id={@expense.id || :new}
     title={@page_title}
     action={@live_action}
+    current_user={@current_user}
     expense={@expense}
     patch={~p"/expenses"}
   />

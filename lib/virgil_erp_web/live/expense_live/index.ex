@@ -6,7 +6,9 @@ defmodule VirgilErpWeb.ExpenseLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :expenses, Expenses.list_expenses())}
+    {:ok,
+     socket
+     |> assign(:expenses, Expenses.list_expenses())}
   end
 
   @impl true
@@ -44,4 +46,6 @@ defmodule VirgilErpWeb.ExpenseLive.Index do
 
     {:noreply, stream_delete(socket, :expenses, expense)}
   end
+
+ 
 end
