@@ -70,28 +70,19 @@ defmodule VirgilErpWeb.Router do
       live "/invoices", InvoiceLive.Index, :index
       live "/invoices/new", InvoiceLive.Index, :new
       live "/invoices/:id/edit", InvoiceLive.Index, :edit
-
       live "/invoices/:id", InvoiceLive.Show, :show
       live "/invoices/:id/show/edit", InvoiceLive.Show, :edit
       live "/revenues", RevenueLive.Index, :index
       live "/revenues/new", RevenueLive.Index, :new
       live "/revenues/:id/edit", RevenueLive.Index, :edit
-
       live "/revenues/:id", RevenueLive.Show, :show
       live "/revenues/:id/show/edit", RevenueLive.Show, :edit
       live "/expenses", ExpenseLive.Index, :index
       live "/expenses/new", ExpenseLive.Index, :new
       live "/expenses/:id/edit", ExpenseLive.Index, :edit
-
-      live "/expenses/:id", ExpenseLive.Show, :show
-      live "/expenses/:id/show/edit", ExpenseLive.Show, :edit
-
       live "/proposals", ProposalLive.Index, :index
       live "/proposals/new", ProposalLive.Index, :new
       live "/proposals/:id/edit", ProposalLive.Index, :edit
-
-      live "/proposals/:id", ProposalLive.Show, :show
-      live "/proposals/:id/show/edit", ProposalLive.Show, :edit
       live "/todos", TodoLive.Index, :index
       live "/todos/:id/edit", TodoLive.Index, :edit
     end
