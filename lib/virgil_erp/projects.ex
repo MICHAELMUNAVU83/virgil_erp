@@ -21,6 +21,11 @@ defmodule VirgilErp.Projects do
     Repo.all(Project)
   end
 
+  def list_projects_for_selection do
+    from(p in Project, select: {p.id, p.title})
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single project.
 

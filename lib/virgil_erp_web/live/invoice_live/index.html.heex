@@ -1,45 +1,122 @@
-<.header>
-  Listing Invoices
-  <:actions>
-    <.link patch={~p"/invoices/new"}>
-      <.button>New Invoice</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="flex justify-between items-center">
+  <p class="text-xl font-semibold text-white">
+    All Invoices
+  </p>
 
-<.table
-  id="invoices"
-  rows={@streams.invoices}
-  row_click={fn {_id, invoice} -> JS.navigate(~p"/invoices/#{invoice}") end}
->
-  <:col :let={{_id, invoice}} label="Invoice"><%= invoice.invoice_id %></:col>
-  <:col :let={{_id, invoice}} label="Amount"><%= invoice.amount %></:col>
-  <:col :let={{_id, invoice}} label="Pay by date"><%= invoice.pay_by_date %></:col>
-  <:col :let={{_id, invoice}} label="Terms and conditions"><%= invoice.terms_and_conditions %></:col>
-  <:col :let={{_id, invoice}} label="Client"><%= invoice.client %></:col>
-  <:col :let={{_id, invoice}} label="Is paid"><%= invoice.is_paid %></:col>
-  <:action :let={{_id, invoice}}>
-    <div class="sr-only">
-      <.link navigate={~p"/invoices/#{invoice}"}>Show</.link>
-    </div>
-    <.link patch={~p"/invoices/#{invoice}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, invoice}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: invoice.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+  <.link patch={~p"/invoices/new"}>
+    <div
+      class="flex mt-4 bg-dark_purple p-2 rounded-md   font-medium text-white cursor-pointer  gap-2 items-center"
+      phx-click="show_new_todo_form"
     >
-      Delete
-    </.link>
-  </:action>
-</.table>
+      +
 
-<.modal :if={@live_action in [:new, :edit]} id="invoice-modal" show on_cancel={JS.patch(~p"/invoices")}>
+      Add Invoice
+    </div>
+  </.link>
+</div>
+
+<div class="w-[100%] mt-4">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-8">
+    <p>
+      Amount
+    </p>
+
+    <p>
+      Client
+    </p>
+
+    <p>
+      PDF Attachment
+    </p>
+
+    <p>
+      Date Added
+    </p>
+
+    <p>
+      Added By
+    </p>
+
+    <p>
+      Project
+    </p>
+
+    <p>
+      Fully Paid
+    </p>
+
+    <p>
+      Actions
+    </p>
+  </div>
+
+  <div class="flex flex-col w-[100%] gap-1">
+    <%= for invoice <- @invoices do %>
+      <div class="flex flex-col w-[100%] gap-1">
+        <div class="grid grid-cols-8 text-center my-2 text-white">
+          <p>
+            {invoice.amount} KES /=
+          </p>
+          <p>
+            {invoice.client}
+          </p>
+
+          <p>
+            <a
+              :if={invoice.pdf_attachment}
+              href={invoice.pdf_attachment}
+              download
+              class="bg-dark_purple text-white px-4 py-2 rounded-md"
+            >
+              <i class="fa fa-download"></i> Download
+            </a>
+          </p>
+
+          <p>
+            {DateFormatter.format_date_to_short(invoice.inserted_at)}
+          </p>
+          <p>
+            {invoice.user.email}
+          </p>
+
+          <p>
+            {invoice.project && invoice.project.name}
+          </p>
+
+          <p>
+            <%= if invoice.is_paid do %>
+              <i class="fa fa-check text-green-500" />
+            <% else %>
+              <i class="fa fa-times text-red-500" />
+            <% end %>
+          </p>
+          <div class="flex gap-5 justify-center items-center ">
+            <.link patch={~p"/invoices/#{invoice.id}/edit"}>
+              <i class="fa fa-pencil" />
+            </.link>
+
+            <.link phx-click="delete" phx-value-id={invoice.id} data-confirm="Are you sure?">
+              <i class="fa fa-trash" />
+            </.link>
+          </div>
+        </div>
+        <p class="bg-gray-500 h-[0.5px] w-[100%]" />
+      </div>
+    <% end %>
+  </div>
+</div>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="invoice-modal"
+  show
+  on_cancel={JS.patch(~p"/invoices")}
+>
   <.live_component
     module={VirgilErpWeb.InvoiceLive.FormComponent}
     id={@invoice.id || :new}
     title={@page_title}
     action={@live_action}
+    current_user={@current_user}
     invoice={@invoice}
     patch={~p"/invoices"}
   />

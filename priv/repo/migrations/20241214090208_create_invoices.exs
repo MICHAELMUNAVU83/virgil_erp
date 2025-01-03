@@ -3,11 +3,9 @@ defmodule VirgilErp.Repo.Migrations.CreateInvoices do
 
   def change do
     create table(:invoices) do
-      add :invoice_id, :text
       add :amount, :float
-      add :pay_by_date, :date
-      add :terms_and_conditions, :text
       add :client, :string
+      add :pdf_attachment, :text
       add :is_paid, :boolean, default: false, null: false
       add :user_id, references(:users, on_delete: :nothing)
       add :project_id, references(:projects, on_delete: :nothing)

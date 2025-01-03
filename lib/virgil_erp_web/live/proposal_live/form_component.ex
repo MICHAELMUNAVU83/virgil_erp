@@ -136,6 +136,8 @@ defmodule VirgilErpWeb.ProposalLive.FormComponent do
         end
 
       attached_receipt ->
+        File.rm(socket.assigns.proposal.attached_receipt)
+
         proposal_params =
           Map.put_new(proposal_params, "attached_receipt", attached_receipt)
 

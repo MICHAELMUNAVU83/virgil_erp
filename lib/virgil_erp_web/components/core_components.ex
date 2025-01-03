@@ -365,6 +365,7 @@ defmodule VirgilErpWeb.CoreComponents do
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
       <.error :for={msg <- @errors}>{msg}</.error>
+      <p class="w-[100%] bg-gray-500 h-[0.5px] " />
     </div>
     """
   end

@@ -68,11 +68,15 @@
           <p>
             {DateFormatter.format_date_to_short(expense.paid_at)}
           </p>
-          <p>
+          <div class="flex gap-5 justify-center items-center">
             <.link patch={~p"/expenses/#{expense.id}/edit"}>
               <i class="fa fa-pencil" />
             </.link>
-          </p>
+
+            <.link phx-click="delete" phx-value-id={expense.id} data-confirm="Are you sure?">
+              <i class="fa fa-trash" />
+            </.link>
+          </div>
         </div>
         <p class="bg-gray-500 h-[0.5px] w-[100%]" />
       </div>

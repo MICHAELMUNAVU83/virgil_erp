@@ -3,10 +3,13 @@ defmodule VirgilErpWeb.InvoiceLive.Index do
 
   alias VirgilErp.Invoices
   alias VirgilErp.Invoices.Invoice
+  alias VirgilErp.DateFormatter
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :invoices, Invoices.list_invoices())}
+    {:ok,
+     socket
+     |> assign(:invoices, Invoices.list_invoices())}
   end
 
   @impl true
