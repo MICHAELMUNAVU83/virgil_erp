@@ -106,7 +106,7 @@ defmodule VirgilErpWeb.TodosComponents do
   defp date_navigation_component(assigns) do
     ~H"""
     <div
-      class={"flex justify-center items-center cursor-pointer gap-1  #{if @date.date == @active_date do "text-white" else "text-gray-500" end}"}
+      class={"flex justify-center items-center cursor-pointer gap-1  #{if @date.date == @active_date do "text-white font-bold" else "text-gray-500" end}"}
       phx-click="activate_date"
       phx-value-date={@date.date}
     >
