@@ -33,6 +33,10 @@ defmodule VirgilErpWeb.TodoLive.Index do
     {:noreply,
      socket
      |> assign(:active_date, Date.from_iso8601!(active_date))
+     |> assign(:show_new_todo_form, false)
+     |> assign_new(:form, fn ->
+       to_form(Todos.change_todo(%Todo{}))
+     end)
      |> assign(
        :dates_for_selection,
        DateFormatter.generate_date_array(Date.utc_today(), socket.assigns.week_offset)
