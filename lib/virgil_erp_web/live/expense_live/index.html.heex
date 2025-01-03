@@ -16,7 +16,7 @@
 </div>
 
 <div class="w-[100%] mt-4">
-  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-5">
+  <div class="grid bg-light_purple text-center rounded-lg text-gray-800 font-normal   p-1 grid-cols-6">
     <p>
       Amount
     </p>
@@ -33,6 +33,10 @@
     </p>
 
     <p>
+      Paid At
+    </p>
+
+    <p>
       Action
     </p>
   </div>
@@ -40,7 +44,7 @@
   <div class="flex flex-col w-[100%] gap-1">
     <%= for expense <- @expenses do %>
       <div class="flex flex-col w-[100%] gap-1">
-        <div class="grid grid-cols-5 text-center my-2 text-white">
+        <div class="grid grid-cols-6 text-center my-2 text-white">
           <p>
             {expense.amount} KES /=
           </p>
@@ -60,10 +64,13 @@
               <i class="fa fa-download"></i> Download
             </a>
           </p>
+
+          <p>
+            {DateFormatter.format_date_to_short(expense.paid_at)}
+          </p>
           <p>
             <.link patch={~p"/expenses/#{expense.id}/edit"}>
-              <i class="fa fa-eye" />
-              <span class="ml-2">View</span>
+              <i class="fa fa-pencil" />
             </.link>
           </p>
         </div>

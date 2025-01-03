@@ -7,7 +7,7 @@ defmodule VirgilErpWeb.ExpenseLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
+      <.header class="ml-2">
         {@title}
       </.header>
 

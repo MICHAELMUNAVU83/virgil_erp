@@ -68,4 +68,11 @@ defmodule VirgilErp.DateFormatter do
   defp month_name(10), do: "October"
   defp month_name(11), do: "November"
   defp month_name(12), do: "December"
+
+  def format_date_to_short(nil) do
+  end
+
+  def format_date_to_short(date) do
+    Timex.format!(date, "{WDshort}, {Mshort} {D}, {YYYY}")
+  end
 end

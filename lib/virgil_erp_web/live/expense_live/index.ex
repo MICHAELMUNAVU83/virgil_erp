@@ -3,6 +3,7 @@ defmodule VirgilErpWeb.ExpenseLive.Index do
 
   alias VirgilErp.Expenses
   alias VirgilErp.Expenses.Expense
+  alias VirgilErp.DateFormatter
 
   @impl true
   def mount(_params, _session, socket) do
@@ -46,6 +47,4 @@ defmodule VirgilErpWeb.ExpenseLive.Index do
 
     {:noreply, stream_delete(socket, :expenses, expense)}
   end
-
- 
 end
